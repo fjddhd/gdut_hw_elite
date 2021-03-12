@@ -15,7 +15,7 @@ public class Main {
      * -- value: 为“-1” 表示del ； 否则表示 add ，值为虚拟机型号
      * */
     public static List<List<LinkedHashMap<String,String>>> allTDayActList;
-    public static List<LinkedHashMap<String,String>> everyTDayActList;
+    public static List<LinkedHashMap<String,String>> everyTDayActList;//临时
 
     /**
      * 限制参数
@@ -24,8 +24,12 @@ public class Main {
     public static void main(String[] argv){
         initial();
         System.err.println("ok");
+        compute();
 
     }
+    /**
+     * 初始化以及清洗数据
+     * */
     public static void initial(){
         list = readLogByList(path + "training-1.txt");
         hmForM_virtualType =new LinkedHashMap<>();
@@ -107,5 +111,12 @@ public class Main {
             System.out.println(ex.getStackTrace());
         }
         return lines;
+    }
+
+    /**
+     * 核心运算代码
+     * */
+    public static void compute(){
+
     }
 }
