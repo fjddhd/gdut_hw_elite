@@ -1,4 +1,4 @@
-package com.huawei.java.main;
+//package com.huawei.java.main;
 
 //import cn.hutool.core.io.FileUtil;
 
@@ -6,6 +6,7 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+    public static Boolean isCommit=false;
     public static String path="E:/huaweiElite/";
     public static List<String> list;//原始数据
     public static int N=-1;//可以采购的服务器类型数量
@@ -273,13 +274,13 @@ public class Main {
                     int needMem=thisVirtualTypelist.get(1);
                     int isDouble=thisVirtualTypelist.get(2);
                     if (needCpu<cpuRemain && needMem<memRemain){
-                        cpuRemain-=needCpu;memRemain-=memRemain;
+                        cpuRemain-=needCpu;memRemain-=needMem;
                     }else {//买新服务器
                         int selectedServerIndex= (int) (Math.random()*serverPool.size());
                         String selectServerType = serverPool.get(selectedServerIndex);
                         List<Integer> thisServerTypeList = hmForN_serverType.get(selectServerType);
-                        cpuRemain=thisServerTypeList.get(0)- isDouble==0?needCpu*2:needCpu;
-                        memRemain=thisServerTypeList.get(1)- isDouble==0?needMem*2:needMem;
+                        cpuRemain=thisServerTypeList.get(0)- (isDouble==0?needCpu*2:needCpu);
+                        memRemain=thisServerTypeList.get(1)- (isDouble==0?needMem*2:needMem);
 
                         purchaseType.add(selectServerType);purchaseNumber.add(String.valueOf(1));
                     }
@@ -315,7 +316,7 @@ public class Main {
             serverCountBefore+=purchaseNumber.size();
         }
 
-//        FileUtil.writeString(sb.toString(),outputPath,"utf-8");
+//        FileUtil.writeString(sb.toString(),System.nanoTime()+outputPath,"utf-8");
     }
     public static void generateEasyServerPool(){
         serverPool=new ArrayList<>();
