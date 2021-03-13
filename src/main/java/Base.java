@@ -10,7 +10,7 @@ import java.util.*;
 public class Base {
     public static Boolean isCommit=false;
     public static String path="E:/huaweiElite/";
-    public static List<String> list;//原始数据
+    public static List<String> origenalDataList;//原始数据
     public static int N=-1;//可以采购的服务器类型数量
     public static HashMap<String,List<Integer>> hmForN_serverType;//(型号 | CPU核数,内存大小,硬件成本,每日能耗成本)
     public static int M=-1;//可以出售的虚拟机类型数量
@@ -41,7 +41,7 @@ public class Base {
      * 初始化以及清洗数据
      * */
     public static void initial_standard1(){
-//        list = readLogByList(path + "training-1.txt");
+//        origenalDataList = readLogByList(path + "training-1.txt");
         hmForM_virtualType =new LinkedHashMap<>();
         hmForN_serverType=new LinkedHashMap<>();
         allTDayActList=new ArrayList<>();
@@ -89,15 +89,15 @@ public class Base {
         }
     }
     public static void initial_standard(){
-//        list = readLogByList(path + "training-1.txt");
+//        origenalDataList = readLogByList(path + "training-1.txt");
         hmForM_virtualType =new LinkedHashMap<>();
         hmForN_serverType=new LinkedHashMap<>();
         allTDayActList=new ArrayList<>();
         everyTDayActList=new ArrayList();
         Scanner in=new Scanner(System.in);
         while (in.hasNext()) {
-//            System.out.println(i+" : "+list.get(i));
-//            String s = list.get(i);
+//            System.out.println(i+" : "+origenalDataList.get(i));
+//            String s = origenalDataList.get(i);
             String s=in.nextLine();
 //            if (s.equals("-1")){
 //                break;
@@ -158,14 +158,14 @@ public class Base {
         allTDayActList.add(everyTDayActList);
     }
     public static void initial(){
-        list = readLogByList(path + "training-1.txt");
+        origenalDataList = readLogByList(path + "training-1.txt");
         hmForM_virtualType =new LinkedHashMap<>();
         hmForN_serverType=new LinkedHashMap<>();
         allTDayActList=new ArrayList<>();
         everyTDayActList=new ArrayList();
-        for (int i = 0; i < list.size(); i++) {
-//            System.out.println(i+" : "+list.get(i));
-            String s = list.get(i);
+        for (int i = 0; i < origenalDataList.size(); i++) {
+//            System.out.println(i+" : "+origenalDataList.get(i));
+            String s = origenalDataList.get(i);
             if (s.charAt(0)!='('){
                 if (N==-1){
                     N=Integer.parseInt(s);
