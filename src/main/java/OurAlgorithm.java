@@ -179,7 +179,7 @@ public class OurAlgorithm extends Base {
             }
             cpus.add(dayAllCpu);mems.add(dayAllMem);
         }
-        List<List> LL=purchaseScheme2();
+        List<List> LL=purchaseScheme1();
         List<String> serverTypes=LL.get(0);
         List<Integer> serverPriority=LL.get(1);
         List<Integer> serverNum=LL.get(2);
@@ -218,7 +218,7 @@ public class OurAlgorithm extends Base {
         Iterator<Map.Entry<String, Integer>> iterator_lhm = lhm.entrySet().iterator();
         while (iterator_lhm.hasNext()) {
             Map.Entry<String, Integer> next = iterator_lhm.next();
-            outputString("---("+next.getKey()+", "+next.getValue()+")");
+            outputString("("+next.getKey()+", "+next.getValue()+")");
 //                System.out.println("("+purchaseType.get(j)+", "+purchaseNumber.get(j)+")");
         }
         outputString("(migration, 0)");
@@ -269,13 +269,14 @@ public class OurAlgorithm extends Base {
     }
 
     public static void computeAssignment(){
-        boolean addPurchaseForLast=true;
+        boolean addPurchaseForLast=false;
         for (int i = 0; i <allTDayActList.size() ; i++) {//T天
             List<String> assignList=new ArrayList<>();
             if (i>=1 && !addPurchaseForLast){
                 assignList.add("(purchase, 0)");
                 assignList.add("(migration, 0)");
-            }else if (i>=1 && addPurchaseForLast){
+            }else if (i>=1 && addPurchaseForLast){//i>=1且且需要追加购买服务器，
+                // 这两行以及中间的新购服务器信息由addPurchaseServer()输出
                 addPurchaseForLast=false;
             }
             List<List<String>> thisDayActLists = allTDayActList.get(i);
@@ -284,33 +285,60 @@ public class OurAlgorithm extends Base {
                 int actVirtId= Integer.parseInt(act.get(0));
                 Virtual actVirtual = virtualMap.get(actVirtId);
                 if (act.size()>=2){//add活动
+                    boolean isAddFinished=false;
                     for (int k = 0; k < serverList.size(); k++) {
-                        if (serverList.get(k).setVirtual(actVirtual)){
-                            int isDouble = actVirtual.getIsDouble();
-                            if (isDouble==1){
-                                assignList.add("("+serverList.get(k).getId()+")");
-                            }else {
-                                String nodeType=actVirtual.getDeployedServerNode()==1?"a":"b";
-                                assignList.add("("+serverList.get(k).getId()+", "+nodeType+")");
-                            }
+                        if (serverList.get(k).canBeSet(actVirtual)){
+                            assignList.add(k+", "+actVirtId);
+                            isAddFinished=true;
                             break;
-                        }else {
-                            //调用追加服务器方法 传入天数i -TODO
-                            addPurchaseServer(addPurchaseScheme1(i));
-                            i--;//需要确保第一天有充足的服务器
-                            continue;
                         }
                     }
-                    for (int k = 0; k < assignList.size(); k++) {
-                        outputString(assignList.get(k));
+                    if (!isAddFinished){
+                        //当前服务器不够用了，调用追加服务器方法 传入天数i
+                        addPurchaseServer(addPurchaseScheme1(i));
+                        addPurchaseForLast=true;
+                        i--;//需要确保第一天有充足的服务器
+                        break;
                     }
                 }else {//del活动
+                    assignList.add("D"+String.valueOf(actVirtId));
+                }
+            }
+            System.err.println("debug");
+            for (int k = 0; k < assignList.size(); k++) {
+                if (assignList.get(k).charAt(0)=='D'){//del
+                    int delVirtualId= Integer.parseInt(assignList.get(k).substring(1));
+                    Virtual actVirtual = virtualMap.get(delVirtualId);
                     int actVirtDeployedServerId = actVirtual.getDeployedServerId();
-                    Server actServer = serverMap.get(actVirtDeployedServerId);
-                    if (actServer.delVirtual(actVirtual)) {
+                    Server actServer = serverMap.get(delVirtualId);
+                    boolean isDel=false;
+                    try {
+                        isDel=actServer.delVirtual(actVirtual);
+                    } catch (Exception e) {
+                        System.err.println("虚拟机已经没有在部署，所以移除失败");
+                        e.printStackTrace();
+                    }
+                    if (isDel) {
 
                     }else {
-                        System.err.println("移除服务器出错");
+                        System.err.println("移除虚拟机出错");
+                    }
+                    continue;
+                }else if(assignList.get(k).charAt(0)=='(') {
+                    outputString(assignList.get(k));
+                    continue;
+                }
+                String[] splitAssignLine = assignList.get(k).split(", ");//serverIndex,virtualId
+                int kk= Integer.parseInt(splitAssignLine[0]);//serverIndex
+                int needToSetVirtualId=Integer.parseInt(splitAssignLine[1]);//virtualId
+                Virtual needToSerVirtual = virtualMap.get(needToSetVirtualId);
+                if (serverList.get(kk).setVirtual(needToSerVirtual)) {
+                    int isDouble = needToSerVirtual.getIsDouble();
+                    if (isDouble==1){
+                        outputString("("+serverList.get(kk).getId()+")");
+                    }else {
+                        String nodeType=needToSerVirtual.getDeployedServerNode()==1?"a":"b";
+                        outputString("("+serverList.get(kk).getId()+", "+nodeType+")");
                     }
                 }
             }
