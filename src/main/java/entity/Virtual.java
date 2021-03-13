@@ -9,8 +9,8 @@ public class Virtual {
     private int requiredMem;
     private int isDouble;
     private boolean isDel;
-    private int deployedServerId;//-1Ä¬ÈÏ
-    private int deployedServerNode;//0Ä¬ÈÏ£¬1-a,2-b,3-ab(Ë«½Úµã)
+    private int deployedServerId;//-1é»˜è®¤
+    private int deployedServerNode;//0é»˜è®¤ï¼Œ1-a,2-b,3-ab(åŒèŠ‚ç‚¹)
 
     public Virtual(int id, String typeName, int requiredCPU, int requiredMem, int isDouble,
                    int deployedServerId,int deployedServerNode) {
@@ -22,14 +22,14 @@ public class Virtual {
         this.deployedServerId = deployedServerId;
         this.isDel=false;
         if (!(deployedServerNode==1 || deployedServerNode==2 || deployedServerNode==3)){
-            System.err.println("ĞéÄâ»úĞÂ½¨³ö´í");
+            System.err.println("è™šæ‹Ÿæœºæ–°å»ºå‡ºé”™");
             throw new NullPointerException();
         }
         if (isDouble==1){
             this.deployedServerNode=3;
         }else {
             if (deployedServerNode==3){
-                System.err.println("ĞéÄâ»úĞÂ½¨³ö´í");
+                System.err.println("è™šæ‹Ÿæœºæ–°å»ºå‡ºé”™");
                 throw new NullPointerException();
             }
             this.deployedServerNode=deployedServerNode;
@@ -47,7 +47,7 @@ public class Virtual {
         if (isDouble==1){
             this.deployedServerNode=3;
         }else {
-            this.deployedServerNode=0;//´ıÖ¸ÅÉ¸øa»òb½Úµã
+            this.deployedServerNode=0;//å¾…æŒ‡æ´¾ç»™aæˆ–bèŠ‚ç‚¹
         }
     }
 
