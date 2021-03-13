@@ -18,9 +18,8 @@ public class Base {
     public static int T=-1;//天数
     /**
      * - 共T天，每天R条数据
-     * - 每条数据为一个LinkedHashMap：
-     * -- key：虚拟机ID
-     * -- value: 为“-1” 表示del ； 否则表示 add ，值为虚拟机型号
+     * - 每条数据为一个List：
+     * -- size=1 表示del 虚拟机id； size=2表示 add ，虚拟机id，虚拟机型号
      * */
     public static List<List<List<String>>> allTDayActList;
     public static List<List<String>> everyTDayActList;//临时

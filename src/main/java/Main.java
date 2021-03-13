@@ -4,6 +4,6 @@ public class Main extends OurAlgorithm {
         initial();
 //        initial_standard();
 //        System.err.println("ok");
-        compute();
+//        compute();
     }
 }

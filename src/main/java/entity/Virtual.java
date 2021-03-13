@@ -1,20 +1,39 @@
 package entity;
 
+import java.util.concurrent.ExecutionException;
+
 public class Virtual {
     private int id;
     private String typeName;
     private int requiredCPU;
     private int requiredMem;
     private int isDouble;
-    private int deployedServerId;
+    private boolean isDel;
+    private int deployedServerId;//-1默认
+    private int deployedServerNode;//0默认，1-a,2-b,3-ab(双节点)
 
-    public Virtual(int id, String typeName, int requiredCPU, int requiredMem, int isDouble, int deployedServerId) {
+    public Virtual(int id, String typeName, int requiredCPU, int requiredMem, int isDouble,
+                   int deployedServerId,int deployedServerNode) {
         this.id = id;
         this.typeName = typeName;
         this.requiredCPU = requiredCPU;
         this.requiredMem = requiredMem;
         this.isDouble = isDouble;
         this.deployedServerId = deployedServerId;
+        this.isDel=false;
+        if (!(deployedServerNode==1 || deployedServerNode==2 || deployedServerNode==3)){
+            System.err.println("虚拟机新建出错");
+            throw new NullPointerException();
+        }
+        if (isDouble==1){
+            this.deployedServerNode=3;
+        }else {
+            if (deployedServerNode==3){
+                System.err.println("虚拟机新建出错");
+                throw new NullPointerException();
+            }
+            this.deployedServerNode=deployedServerNode;
+        }
     }
 
     public Virtual(int id, String typeName, int requiredCPU, int requiredMem, int isDouble) {
@@ -24,6 +43,12 @@ public class Virtual {
         this.requiredMem = requiredMem;
         this.isDouble = isDouble;
         deployedServerId=-1;
+        this.isDel=false;
+        if (isDouble==1){
+            this.deployedServerNode=3;
+        }else {
+            this.deployedServerNode=0;//待指派给a或b节点
+        }
     }
 
     public int getId() {
@@ -70,8 +95,24 @@ public class Virtual {
         return deployedServerId;
     }
 
+    public boolean getIsDel() {
+        return isDel;
+    }
+
+    public void setIsDel(boolean isDel) {
+        this.isDel = isDel;
+    }
+
     //-TODO
     public void setDeployedServerId(int deployedServerId) {
         this.deployedServerId = deployedServerId;
+    }
+
+    public int getDeployedServerNode() {
+        return deployedServerNode;
+    }
+
+    public void setDeployedServerNode(int deployedServerNode) {
+        this.deployedServerNode = deployedServerNode;
     }
 }
