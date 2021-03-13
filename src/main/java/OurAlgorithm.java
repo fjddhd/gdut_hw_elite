@@ -130,11 +130,11 @@ public class OurAlgorithm extends Base {
                 outputString("(migration, 0)");
             }
             List<List<String>> thisDayActLists = allTDayActList.get(i);
-            for (int j = 0; j < thisDayActLists.size(); j++) {
+            for (int j = 0; j < thisDayActLists.size(); j++) {//当天每个活动
                 List<String> act = thisDayActLists.get(j);
                 int actVirtId= Integer.parseInt(act.get(0));
                 Virtual actVirtual = virtualMap.get(actVirtId);
-                if (act.size()>=2){//add
+                if (act.size()>=2){//add活动
                     for (int k = 0; k < serverList.size(); k++) {
                         if (serverList.get(k).setVirtual(actVirtual)){
                             int isDouble = actVirtual.getIsDouble();
@@ -150,7 +150,7 @@ public class OurAlgorithm extends Base {
 
                         }
                     }
-                }else {//del
+                }else {//del活动
                     int actVirtDeployedServerId = actVirtual.getDeployedServerId();
                     Server actServer = serverMap.get(actVirtDeployedServerId);
                     if (actServer.delVirtual(actVirtual)) {
